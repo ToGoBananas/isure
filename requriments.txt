@@ -5,7 +5,6 @@ django-grappelli
 Pillow
 django-model-utils
 django-extensions
-lxml
 psycopg2
 requests
 django-cron

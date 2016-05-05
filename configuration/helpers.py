@@ -1,11 +1,10 @@
-from .models import Currency
-from policies.models import Policy
 import requests
 from xml.etree import ElementTree
 import datetime
 
 
 def get_cbr_info():
+    from .models import Currency
     currency = Currency.objects.get_or_create(pk=1)[0]
 
     response = requests.get('http://www.cbr.ru/scripts/XML_daily.asp?date_req=')
@@ -22,6 +21,7 @@ def get_cbr_info():
 
 
 def get_bordereau(start=None, end=None):
+    from policies.models import Policy
     policies = None
     if not start or not end:
         policies = Policy.objects.filter(created_date=datetime.datetime.today())

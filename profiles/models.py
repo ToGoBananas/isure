@@ -55,6 +55,10 @@ class Profile(ProfileBase):
     def __str__(self):
         return self.user.email
 
+    @property
+    def token(self):
+        return self.user.token
+
 
 class AdditionalProfile(ProfileBase):
     profile = models.ForeignKey(Profile)

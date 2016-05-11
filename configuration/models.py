@@ -1,5 +1,5 @@
 from django.db import models
-from policies.models import Policy
+from policies.models import PolicyBase
 
 
 class Currency(models.Model):
@@ -28,7 +28,7 @@ class AppRules(models.Model):
 
 class Bordereau(models.Model):
     csv = models.FileField(upload_to='bordereau/')
-    insure = models.ForeignKey(Policy)
+    insure = models.ForeignKey(PolicyBase)
     start = models.DateField()
     end = models.DateField()
 

@@ -1,5 +1,5 @@
 from .models import Currency
-from policies.models import Policy
+from policies.models import PolicyBase
 import requests
 from xml.etree import ElementTree
 import datetime
@@ -24,6 +24,6 @@ def get_cbr_info():
 def get_bordereau(start=None, end=None):
     policies = None
     if not start or not end:
-        policies = Policy.objects.filter(created_date=datetime.datetime.today())
+        policies = PolicyBase.objects.filter(created_date=datetime.datetime.today())
     else:
-        policies = Policy.objects.filter(created_date__range=(start, end))
+        policies = PolicyBase.objects.filter(created_date__range=(start, end))

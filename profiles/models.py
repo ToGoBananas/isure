@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from model_utils.choices import Choices
 from phonenumber_field.modelfields import PhoneNumberField
 from model_utils.models import TimeStampedModel
+from rest_framework.authtoken.models import Token
 
 
 class ProfileBase(TimeStampedModel):
@@ -56,8 +57,12 @@ class Profile(ProfileBase):
         return self.user.email
 
     @property
+    def additional_profiles(self):
+        return self.additionalprofile_set.all()
+
+    @property
     def token(self):
-        return self.user.token
+        return Token.objects.get_or_create(user=self.user)[0].key
 
 
 class AdditionalProfile(ProfileBase):
@@ -69,5 +74,4 @@ class AdditionalProfile(ProfileBase):
         verbose_name_plural = 'Дополнительные профили'
 
     def __str__(self):
-        return self.profile
-
+        return self.name

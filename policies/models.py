@@ -16,9 +16,6 @@ class PolicyBase(TimeStampedModel):
     activation_date = models.DateField('Дата начала действия полиса')
     end_date = models.DateField('Дата окончания действия полиса')
 
-    # sum = models.FloatField()
-    # INSURE_TYPE = Choices('ВЗР', 'ИФЛ')
-
     insure_type = models.CharField('тип страхования', max_length=70)
     payment_status = models.CharField(max_length=255, blank=True, null=True)
     DELIVERY_STATUS = Choices('запрошен', 'создан', 'загружен на клиент')
@@ -26,9 +23,14 @@ class PolicyBase(TimeStampedModel):
     pdf = models.URLField()
     jpg = models.URLField()
 
+    exchange_rate = models.FloatField(null=True)
     cost_val = models.FloatField()
     cost_rub = models.FloatField()
     cost_total = models.FloatField()
+
+    @property
+    def accidents(self):
+        return self.insuredaccident_set.all()
 
     @property
     def created_date(self):
@@ -53,6 +55,14 @@ class InsuredAccident(TimeStampedModel):
     status = models.CharField('Cтатус рассмотрения случая', choices=STATUS, max_length=20)
     user_comment = models.TextField(max_length=600, blank=True, null=True)
     admin_comment = models.TextField(max_length=600, blank=True, null=True)
+    profile = models.ForeignKey(Profile, null=True)
+    additional_profile = models.ForeignKey(AdditionalProfile, null=True)
+
+    def get_profile(self):
+        if self.profile:
+            return self.profile
+        else:
+            return self.additional_profile
 
     class Meta:
         verbose_name = 'страховой случай'
@@ -63,22 +73,15 @@ class VZRPolicy(models.Model):
     policy = models.ForeignKey(PolicyBase)
     territory = models.CharField('территория действия', max_length=20, default='Весь Мир')
     sport = models.BooleanField(default=False)
+    insured = models.OneToOneField('PolicyInsured', null=True)
 
     class Meta:
         verbose_name = 'взр'
         verbose_name_plural = 'ВЗР'
 
 
-class AccidentPolicy(models.Model):
-
-    class Meta:
-        verbose_name = 'полис'
-        verbose_name_plural = 'Полисы'
-
-
 class IFLPolicy(models.Model):
     policy = models.ForeignKey(PolicyBase, null=True)
-    property = models.OneToOneField('InsuredProperty')
 
     class Meta:
         verbose_name = 'ифл'
@@ -87,6 +90,7 @@ class IFLPolicy(models.Model):
 
 class NSPolicy(models.Model):
     policy = models.ForeignKey(PolicyBase)
+    insured = models.OneToOneField('PolicyInsured', null=True)
 
     class Meta:
         verbose_name = 'нз'
@@ -105,6 +109,10 @@ class InsuredProperty(models.Model):
                                  blank=True, default='')
     apartment = models.CharField('квартира', max_length=10)
 
+    class Meta:
+        verbose_name = 'застрахованная собственность'
+        verbose_name_plural = 'Застрахованная собственность'
+
     def __str__(self):
         return self.name
 
@@ -112,12 +120,18 @@ class InsuredProperty(models.Model):
 class RequestChanges(TimeStampedModel):
     profile = models.ForeignKey(Profile)
     police = models.ForeignKey(PolicyBase)
+    STATUS = Choices('Открыто', 'В работе', 'Закрыто')
+    status = models.CharField('Cтатус запроса', choices=STATUS, max_length=20, default='Открыто')
+    text = models.TextField(max_length=600, null=True)
+
+    class Meta:
+        verbose_name = 'запрос изменений'
+        verbose_name_plural = 'Запрос изменений'
 
     def __str__(self):
         return self.profile.user.email
 
 
-
-# class VZRInsuredProfile(models.Model):
-#     policy = models.ForeignKey(VZRInsurancePolicy)
-#     profile = models.ForeignKey(PolicyBase)
+class PolicyInsured(models.Model):
+    profile = models.ForeignKey(Profile)
+    additional_profiles = models.ManyToManyField(AdditionalProfile)

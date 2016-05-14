@@ -1,11 +1,16 @@
-from .models import Profile
-from .serializers import ProfileSerializer
+from .models import Profile, AdditionalProfile
+from .serializers import ProfileSerializer, AdditionalProfileSerializer
 from rest_framework import generics
-from rest_framework.authentication import TokenAuthentication
 
 
 class ProfilesView(generics.ListAPIView, generics.CreateAPIView, generics.DestroyAPIView):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
-    permission_classes = (TokenAuthentication, )
 
+
+class AdditionalProfilesView(generics.ListAPIView, generics.CreateAPIView, generics.DestroyAPIView):
+    serializer_class = AdditionalProfileSerializer
+
+    def get_queryset(self):
+        profile = Profile.objects.get(user=self.request.user)
+        return AdditionalProfile.objects.filter(profile=profile)

@@ -28,7 +28,6 @@ class AppRules(models.Model):
 
 class Bordereau(models.Model):
     csv = models.FileField(upload_to='bordereau/')
-    insure = models.ForeignKey(PolicyBase)
     start = models.DateField()
     end = models.DateField()
 

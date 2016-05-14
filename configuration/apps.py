@@ -7,3 +7,4 @@ class ConfigurationConfig(AppConfig):
     def ready(self):
         from .helpers import get_cbr_info
         get_cbr_info()
+        from . import signals

@@ -133,5 +133,8 @@ class RequestChanges(TimeStampedModel):
 
 
 class PolicyInsured(models.Model):
-    profile = models.ForeignKey(Profile)
-    additional_profiles = models.ManyToManyField(AdditionalProfile)
+    profile = models.ForeignKey(Profile, null=True, blank=True)
+    additional_profiles = models.ManyToManyField(AdditionalProfile, blank=True)
+
+    def __str__(self):
+        return self.profile.user.email

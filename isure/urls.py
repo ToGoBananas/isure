@@ -16,6 +16,8 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework.authtoken import views
+from django.conf.urls.static import static
+from django.conf import settings
 
 
 urlpatterns = [
@@ -26,4 +28,4 @@ urlpatterns = [
     url(r'^api/profiles/', include('profiles.urls')),
     url(r'^api/policies/', include('policies.urls')),
     url(r'^api/feedback/', include('feedback.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

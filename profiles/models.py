@@ -47,7 +47,6 @@ class Profile(ProfileBase):
     apartment = models.CharField('квартира', max_length=10)
 
     promo_code = models.CharField('промо-код', max_length=50, blank=True, null=True)
-    latest_action = models.DateTimeField('последние действие', blank=True, null=True)
 
     class Meta:
         verbose_name = 'профиль'

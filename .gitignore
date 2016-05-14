@@ -2,3 +2,5 @@
 *.pyc
 test.py
 upload/
+media/
+static/

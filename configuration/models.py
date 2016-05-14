@@ -27,12 +27,13 @@ class AppRules(models.Model):
 
 
 class Bordereau(models.Model):
-    csv = models.FileField(upload_to='bordereau/')
+    csv = models.FileField(upload_to='bordereau/', blank=True, null=True)
     start = models.DateField()
     end = models.DateField()
+    created = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
-        return str(self.last_modified)
+        return str(self.created)
 
     class Meta:
         verbose_name = 'бордеро'

@@ -3,6 +3,8 @@ from policies.models import PolicyBase
 import requests
 from xml.etree import ElementTree
 import datetime
+import csv
+import io
 
 
 def get_cbr_info():
@@ -24,6 +26,12 @@ def get_cbr_info():
 def get_bordereau(start=None, end=None):
     policies = None
     if not start or not end:
-        policies = PolicyBase.objects.filter(created_date=datetime.datetime.today())
+        print('AAAAAAAAAAAAAA')
+        policies = PolicyBase.objects.filter(created__date=datetime.datetime.today())
     else:
-        policies = PolicyBase.objects.filter(created_date__range=(start, end))
+        policies = PolicyBase.objects.filter(created__date__range=(start, end))
+    output = io.StringIO()
+    writer = csv.writer(output)
+    for policy in policies:
+        writer.writerow([policy.insure_type, policy.owner.user.email])
+    return output.getvalue()

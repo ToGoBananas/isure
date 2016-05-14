@@ -14,5 +14,4 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        depth = 1
         fields = '__all__'

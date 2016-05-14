@@ -4,6 +4,7 @@ from . import views
 
 
 urlpatterns = [
+    url(r'^$', views.PolicyBaseView.as_view()),
     url(r'^ns/$', views.NSPView.as_view()),
     url(r'^ifl/$', views.IFLView.as_view()),
     url(r'^vzr/$', views.VZRView.as_view()),

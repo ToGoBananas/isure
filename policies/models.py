@@ -9,6 +9,7 @@ from model_utils.models import TimeStampedModel
 class PolicyBase(TimeStampedModel):
     STATUS = Choices('expired', 'active', 'upcoming', 'canceled')
     status = models.CharField('Cтатус полиса', choices=STATUS, max_length=15)
+    create_addr = models.CharField(max_length=300, blank=True, null=True)
     create_coords = models.CharField('Координаты места создания', max_length=100)
 
     owner = models.ForeignKey(Profile, verbose_name='Владелец')
@@ -50,7 +51,6 @@ class PolicyBase(TimeStampedModel):
 
 class InsuredAccident(TimeStampedModel):
     policy = models.ForeignKey(PolicyBase)
-    create_coords = models.CharField('Координаты места создания', max_length=100)
     STATUS = Choices('на рассмотрении', 'отказано')
     status = models.CharField('Cтатус рассмотрения случая', choices=STATUS, max_length=20)
     user_comment = models.TextField(max_length=600, blank=True, null=True)

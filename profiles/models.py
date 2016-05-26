@@ -8,6 +8,7 @@ from rest_framework.authtoken.models import Token
 
 class ProfileBase(TimeStampedModel):
     create_coords = models.CharField('Координаты места создания', max_length=100)
+    create_addr = models.CharField(max_length=300, blank=True, null=True)
     birthdate = models.DateField('Дата рождения')
 
     SEX = Choices('мужской', 'женский')
@@ -28,7 +29,7 @@ class ProfileBase(TimeStampedModel):
 class Profile(ProfileBase):
     user = models.OneToOneField(User)
 
-    password = models.CharField('Пароль на клиент', max_length=100)
+    password = models.BooleanField('Используется пароль на клиент', default=True)
     phone = PhoneNumberField('Телефон', max_length=20)
     signature = models.FileField('Подпись (файл)', upload_to='upload/')
 

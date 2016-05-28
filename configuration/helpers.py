@@ -26,7 +26,6 @@ def get_cbr_info():
 def get_bordereau(start=None, end=None):
     policies = None
     if not start or not end:
-        print('AAAAAAAAAAAAAA')
         policies = PolicyBase.objects.filter(created__date=datetime.datetime.today())
     else:
         policies = PolicyBase.objects.filter(created__date__range=(start, end))

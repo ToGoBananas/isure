@@ -47,6 +47,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     class Meta(AbstractUser.Meta):
         swappable = 'AUTH_USER_MODEL'
 
+    @property
+    def profile(self):
+        return Profile.objects.get(user=self)
+
     def __str__(self):
         return str(self.email)
 

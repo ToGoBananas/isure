@@ -1,7 +1,7 @@
 from .models import Profile, AdditionalProfile, CustomUser
 from .serializers import ProfileSerializer, AdditionalProfileSerializer, UserSerializer
 
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics
 
 

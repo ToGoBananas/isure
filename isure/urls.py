@@ -18,12 +18,12 @@ from django.contrib import admin
 from rest_framework.authtoken import views
 from django.conf.urls.static import static
 from django.conf import settings
-
+from .views import GetToken
 
 urlpatterns = [
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^api-auth/', include('rest_framework.urls')),
-    url(r'^api-token-auth/', views.obtain_auth_token),
+    url(r'^get-token/', GetToken.as_view()),
     url(r'^admin/', admin.site.urls),
     url(r'^api/profiles/', include('profiles.urls')),
     url(r'^api/policies/', include('policies.urls')),

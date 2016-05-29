@@ -1,14 +1,22 @@
-from .models import Profile, AdditionalProfile, CustomUser
-from .serializers import ProfileSerializer, AdditionalProfileSerializer, UserSerializer
+from .models import Profile, AdditionalProfile
+from .serializers import ProfileSerializer, AdditionalProfileSerializer, ProfileCreateSerializer
 
-from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics
+from .permissions import ProfilePermission
 
 
-class ProfilesView(generics.ListAPIView, generics.UpdateAPIView, generics.CreateAPIView, generics.DestroyAPIView):
-    serializer_class = UserSerializer
-    queryset = CustomUser.objects.all()
-    permission_classes = (AllowAny, )
+class ProfileView(generics.RetrieveUpdateDestroyAPIView, generics.CreateAPIView):
+    permission_classes = (ProfilePermission, )
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return ProfileCreateSerializer
+        else:
+            return ProfileSerializer
+
+    def get_object(self):
+        user = self.request.user
+        return Profile.objects.get(user=user)
 
 
 class AdditionalProfilesView(generics.ListAPIView, generics.CreateAPIView, generics.DestroyAPIView):
@@ -24,5 +32,4 @@ class CView(generics.ListAPIView, generics.CreateAPIView, generics.DestroyAPIVie
     queryset = Profile.objects.all()
 
     def post(self, request, *args, **kwargs):
-        print(request.POST)
         return self.create(request, *args, **kwargs)

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
+
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -46,6 +47,9 @@ INSTALLED_APPS = [
     'policies',
     'feedback',
 ]
+
+AUTH_USER_MODEL = 'profiles.CustomUser'
+
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -86,11 +90,11 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'isure',
-        'USER': 'isure',
-        'PASSWORD': 'isure',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
         'HOST': '127.0.0.1',
         'PORT': '5432',
-    }
+    },
 }
 
 
@@ -122,10 +126,13 @@ CRON_CLASSES = [
     "configuration.crons.CronBordereauJob",
 ]
 
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
         'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.DjangoModelPermissions',
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
@@ -133,17 +140,22 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_THROTTLE_CLASSES': (
-        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.ScopedRateThrottle',
         'rest_framework.throttling.UserRateThrottle'
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework.renderers.MultiPartRenderer'
     ),
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.JSONParser',
         'rest_framework.parsers.FormParser',
         'rest_framework.parsers.MultiPartParser'
+    ),
+    'TEST_REQUEST_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.MultiPartRenderer',
     )
 }
 
@@ -151,3 +163,4 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = True
 SECURE_HSTS_SECONDS = 3600
 SECURE_SSL_HOST = 'circleins.ru'
+

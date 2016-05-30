@@ -12,6 +12,9 @@ class PolicyBase(TimeStampedModel):
     create_addr = models.CharField('Адрес создания', max_length=300, blank=True, null=True)
     create_coords = models.CharField('Координаты места создания', max_length=100, blank=True, null=True)
 
+    activate_addr = models.CharField('Адрес активации', max_length=300, blank=True, null=True)
+    activate_coords = models.CharField('Координаты активации', max_length=100, blank=True, null=True)
+
     owner = models.ForeignKey(Profile, verbose_name='Владелец')
 
     activation_date = models.DateField('Дата начала действия полиса')
@@ -51,7 +54,6 @@ class PolicyBase(TimeStampedModel):
 
 class InsuredAccident(TimeStampedModel):
     policy = models.ForeignKey(PolicyBase)
-    create_coords = models.CharField('Координаты места создания', max_length=100, blank=True, null=True)
     STATUS = Choices('на рассмотрении', 'отказано')
     status = models.CharField('Cтатус рассмотрения случая', choices=STATUS, max_length=20)
     user_comment = models.TextField(max_length=600, blank=True, null=True)
@@ -94,8 +96,11 @@ class NSPolicy(models.Model):
     insured = models.OneToOneField('PolicyInsured', null=True)
 
     class Meta:
-        verbose_name = 'нз'
-        verbose_name_plural = 'НЗ'
+        verbose_name = 'нc'
+        verbose_name_plural = 'НC'
+
+    def __str__(self):
+        return self.policy.insure_type
 
 
 class InsuredProperty(models.Model):

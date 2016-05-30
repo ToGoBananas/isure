@@ -1,12 +1,12 @@
-from .models import InsuredAccident, VZRPolicy, NSPolicy, IFLPolicy
+from .models import PolicyBase
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from locations.helpers import get_address_by_geocode
 
 
-@receiver(pre_save, sender=InsuredAccident)
-@receiver(pre_save, sender=VZRPolicy)
-@receiver(pre_save, sender=IFLPolicy)
-@receiver(pre_save, sender=NSPolicy)
+@receiver(pre_save, sender=PolicyBase)
 def save_add(sender, instance=None, **kwargs):
-    instance.policy.create_addr = get_address_by_geocode(instance.policy.create_coords)
+    if not instance.create_addr and instance.create_coords:
+        instance.create_addr = get_address_by_geocode(instance.create_coords)
+    if not instance.activate_addr and instance.activate_coords:
+        instance.activate_addr = get_address_by_geocode(instance.activate_coords)

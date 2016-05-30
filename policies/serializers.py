@@ -34,8 +34,12 @@ class NSPolicySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NSPolicy
-        depth = 3
         fields = '__all__'
+
+    def create(self, validated_data):
+        policy_data = validated_data.pop('policy')
+        policy = PolicyBase.objects.create(**policy_data)
+        return NSPolicy.objects.create(policy=policy, **validated_data)
 
 
 class InsuredAccidentSerializer(serializers.ModelSerializer):

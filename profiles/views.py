@@ -3,6 +3,7 @@ from .serializers import ProfileSerializer, AdditionalProfileSerializer, Profile
 
 from rest_framework import generics
 from .permissions import ProfilePermission
+from rest_framework.parsers import FileUploadParser
 
 
 class ProfileView(generics.RetrieveUpdateDestroyAPIView, generics.CreateAPIView):

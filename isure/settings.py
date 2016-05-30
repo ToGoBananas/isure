@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'profiles',
     'policies',
     'feedback',
+    'promo',
 ]
 
 AUTH_USER_MODEL = 'profiles.CustomUser'
@@ -126,13 +127,10 @@ CRON_CLASSES = [
     "configuration.crons.CronBordereauJob",
 ]
 
-
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
+    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-        'rest_framework.permissions.AllowAny',
-
-    ],
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
@@ -150,7 +148,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.JSONParser',
         'rest_framework.parsers.FormParser',
-        'rest_framework.parsers.MultiPartParser'
+        'rest_framework.parsers.MultiPartParser',
     ),
     'TEST_REQUEST_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
@@ -162,4 +160,3 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = True
 SECURE_HSTS_SECONDS = 3600
 SECURE_SSL_HOST = 'circleins.ru'
-

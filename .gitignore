@@ -4,3 +4,14 @@ test.py
 upload/
 media/
 static/
+manage.py
+configuration/__pycache__/
+configuration/migrations/__pycache__/
+feedback/__pycache__/
+feedback/migrations/__pycache__/
+isure/__pycache__/
+locations/__pycache__/
+policies/__pycache__/
+policies/migrations/__pycache__/
+profiles/__pycache__/
+profiles/migrations/__pycache__/

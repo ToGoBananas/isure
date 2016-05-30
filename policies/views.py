@@ -1,7 +1,8 @@
 from .models import PolicyBase, IFLPolicy, VZRPolicy, NSPolicy, InsuredAccident, RequestChanges
 from profiles.models import Profile
 from .serializers import IFLPolicySerializer, VZRPolicySerializer, NSPolicySerializer,\
-    InsuredAccidentSerializer, RequestChangesSerializer, PolicyBaseSerializer
+    InsuredAccidentSerializer, RequestChangesSerializer
+from .mixins import ProfileListAPIView
 
 from rest_framework import generics
 
@@ -22,12 +23,9 @@ class VZRView(generics.ListAPIView, generics.CreateAPIView, generics.DestroyAPIV
         return VZRPolicy.objects.filter(policy__owner=profile)
 
 
-class NSPView(generics.ListAPIView, generics.CreateAPIView, generics.DestroyAPIView):
+class NSView(ProfileListAPIView, generics.CreateAPIView, generics.DestroyAPIView):
     serializer_class = NSPolicySerializer
-
-    def get_queryset(self):
-        profile = Profile.objects.get(user=self.request.user)
-        return NSPolicy.objects.filter(policy__owner=profile)
+    queryset = NSPolicy.objects
 
 
 class InsuredAccidentView(generics.ListAPIView, generics.CreateAPIView, generics.DestroyAPIView):
@@ -41,8 +39,3 @@ class RequestChangesView(generics.ListAPIView, generics.CreateAPIView, generics.
     def get_queryset(self):
         profile = Profile.objects.get(user=self.request.user)
         return RequestChanges.objects.filter(profile=profile)
-
-
-class PolicyBaseView(generics.ListAPIView, generics.CreateAPIView, generics.DestroyAPIView):
-    serializer_class = PolicyBaseSerializer
-    queryset = PolicyBase.objects.all()

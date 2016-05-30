@@ -11,3 +11,5 @@ django-cron
 djangorestframework
 markdown
 django-filter
+uwsgi
+django-nested-admin

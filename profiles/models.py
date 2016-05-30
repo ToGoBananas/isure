@@ -83,7 +83,7 @@ class Profile(ProfileBase):
 
     use_password = models.BooleanField('Использовать пароль на клиент?', default=False)
     phone = PhoneNumberField('Телефон', max_length=30)
-    signature = models.FileField('Подпись (файл)', upload_to='upload/', blank=True, null=True)
+    signature = models.ImageField('Подпись (файл)', upload_to='upload/', blank=True, null=True)
 
     passport_rf = models.CharField('Номер пасспорта РФ', max_length=50)
 
@@ -98,8 +98,6 @@ class Profile(ProfileBase):
     bld_child = models.CharField('корпус', max_length=10,
                                  blank=True, default='')
     apartment = models.CharField('квартира', max_length=10)
-
-    promo_code = models.CharField('промо-код', max_length=50, blank=True, null=True)
 
     class Meta:
         verbose_name = 'профиль'

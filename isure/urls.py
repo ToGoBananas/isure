@@ -20,6 +20,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from .views import GetToken
 
+
 urlpatterns = [
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^api-auth/', include('rest_framework.urls')),

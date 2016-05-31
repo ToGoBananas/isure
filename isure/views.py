@@ -13,9 +13,8 @@ class GetToken(APIView):
 
     def post(self, request, format=None):
         email = request.data['email']
-        password = request.data['password']
         user = get_object_or_404(CustomUser, email=email)
-        if user.profile.use_password and not user.check_password(password):
+        if user.profile.use_password and not user.check_password(request.data['password']):
             content = {'error': 'wrong password'}
         else:
             token, created = Token.objects.get_or_create(user=user)

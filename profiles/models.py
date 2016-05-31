@@ -44,7 +44,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject, message, from_email=None):
         send_mail(subject, message, from_email, [self.email])
 
-    class Meta(AbstractUser.Meta):
+    class Meta(AbstractBaseUser.Meta):
         swappable = 'AUTH_USER_MODEL'
 
     @property

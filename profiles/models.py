@@ -10,7 +10,6 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import PermissionsMixin, User, AbstractUser
-from django.conf import settings
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
@@ -79,7 +78,7 @@ class ProfileBase(TimeStampedModel):
 
 
 class Profile(ProfileBase):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    user = models.OneToOneField(CustomUser)
 
     use_password = models.BooleanField('Использовать пароль на клиент?', default=False)
     phone = PhoneNumberField('Телефон', max_length=30)

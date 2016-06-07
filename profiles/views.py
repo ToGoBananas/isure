@@ -23,6 +23,11 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView, generics.CreateAPIView)
 class AdditionalProfilesView(generics.ListAPIView, generics.CreateAPIView, generics.DestroyAPIView):
     serializer_class = AdditionalProfileSerializer
 
+    def create(self, request, *args, **kwargs):
+        request.data['profile'] = request.user.profile.pk
+        print(request.data['profile'])
+        super(AdditionalProfilesView, self).create(request, *args, **kwargs)
+
     def get_queryset(self):
         profile = Profile.objects.get(user=self.request.user)
         return AdditionalProfile.objects.filter(profile=profile)

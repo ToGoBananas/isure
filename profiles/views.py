@@ -31,11 +31,7 @@ class AdditionalProfilesView(generics.ListAPIView, generics.CreateAPIView, gener
 
     def create(self, request, *args, **kwargs):
         request.data['profile'] = request.user.profile.pk
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=201, headers=headers)
+        return super(AdditionalProfilesView, self).create(request, *args, **kwargs)
 
     def get_queryset(self):
         profile = Profile.objects.get(user=self.request.user)

@@ -23,6 +23,12 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView, generics.CreateAPIView)
 class AdditionalProfilesView(generics.ListAPIView, generics.CreateAPIView, generics.DestroyAPIView):
     serializer_class = AdditionalProfileSerializer
 
+    def get_object(self):
+        name = self.request.data.get('name')
+        profile = self.request.user.profile
+        print(name)
+        return AdditionalProfile.objects.get(name=name, profile=profile)
+
     def create(self, request, *args, **kwargs):
         request.data['profile'] = request.user.profile.pk
         print(request.data['profile'])

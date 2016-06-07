@@ -26,12 +26,10 @@ class AdditionalProfilesView(generics.ListAPIView, generics.CreateAPIView, gener
     def get_object(self):
         name = self.request.data.get('name')
         profile = self.request.user.profile
-        print(name)
         return AdditionalProfile.objects.get(name=name, profile=profile)
 
     def create(self, request, *args, **kwargs):
         request.data['profile'] = request.user.profile.pk
-        print(request.data['profile'])
         super(AdditionalProfilesView, self).create(request, *args, **kwargs)
 
     def get_queryset(self):

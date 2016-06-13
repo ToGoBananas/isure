@@ -7,14 +7,19 @@ from locations.helpers import get_address_by_geocode
 
 @receiver(pre_save, sender=Profile)
 def create_auth_token(sender, instance=None, **kwargs):
-    instance.create_addr = get_address_by_geocode(instance.create_coords)
+    try:
+        instance.create_addr = get_address_by_geocode(instance.create_coords)
+    except Exception:
+        pass
     Token.objects.get_or_create(user=instance.user)
-
 
 
 @receiver(pre_save, sender=AdditionalProfile)
 def addr(sender, instance=None, **kwargs):
-    instance.create_addr = get_address_by_geocode(instance.create_coords)
+    try:
+        instance.create_addr = get_address_by_geocode(instance.create_coords)
+    except Exception:
+        pass
 
 
 @receiver(post_delete, sender=Profile)

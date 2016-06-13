@@ -3,8 +3,6 @@ from .serializers import ProfileSerializer, AdditionalProfileSerializer, Profile
 
 from rest_framework import generics
 from .permissions import ProfilePermission
-from rest_framework.parsers import FileUploadParser
-from rest_framework.response import Response
 
 
 class ProfileView(generics.RetrieveUpdateDestroyAPIView, generics.CreateAPIView):
@@ -21,13 +19,13 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView, generics.CreateAPIView)
         return Profile.objects.get(user=user)
 
 
-class AdditionalProfilesView(generics.ListAPIView, generics.CreateAPIView, generics.DestroyAPIView):
+class AdditionalProfilesView(generics.ListAPIView, generics.CreateAPIView, generics.DestroyAPIView, generics.UpdateAPIView):
     serializer_class = AdditionalProfileSerializer
 
     def get_object(self):
-        name = self.request.data.get('name')
+        id = self.request.data.get('id')
         profile = self.request.user.profile
-        return AdditionalProfile.objects.get(name=name, profile=profile)
+        return AdditionalProfile.objects.get(id=id, profile=profile)
 
     def create(self, request, *args, **kwargs):
         request.data['profile'] = request.user.profile.pk

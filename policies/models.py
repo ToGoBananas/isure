@@ -15,22 +15,22 @@ class PolicyBase(TimeStampedModel):
     activate_addr = models.CharField('Адрес активации', max_length=300, blank=True, null=True)
     activate_coords = models.CharField('Координаты активации', max_length=100, blank=True, null=True)
 
-    owner = models.ForeignKey(Profile, verbose_name='Владелец')
+    owner = models.ForeignKey(Profile, verbose_name='Владелец', blank=True)
 
     activation_date = models.DateField('Дата начала действия полиса')
     end_date = models.DateField('Дата окончания действия полиса')
 
     insure_type = models.CharField('тип страхования', max_length=70)
-    payment_status = models.CharField(max_length=255, blank=True, null=True)
+    PAYMENT_STATUS = Choices('отменен', 'проверка', 'завершен')
+    payment_status = models.CharField(max_length=255, blank=True, null=True, choices=PAYMENT_STATUS)
     DELIVERY_STATUS = Choices('запрошен', 'создан', 'загружен на клиент')
     delivery_status = models.CharField('статус доставки', choices=DELIVERY_STATUS, max_length=25)
-    pdf = models.URLField()
-    jpg = models.URLField()
+    pdf = models.URLField(null=True, blank=True)
+    jpg = models.URLField(null=True, blank=True)
 
-    exchange_rate = models.FloatField(null=True)
-    cost_val = models.FloatField()
+    exchange_rate = models.FloatField(null=True, blank=True)
+    cost_val = models.FloatField(null=True, blank=True)
     cost_rub = models.FloatField()
-    cost_total = models.FloatField()
 
     @property
     def accidents(self):
@@ -76,7 +76,8 @@ class VZRPolicy(models.Model):
     policy = models.ForeignKey(PolicyBase)
     territory = models.CharField('территория действия', max_length=20, default='Весь Мир')
     sport = models.BooleanField(default=False)
-    insured = models.OneToOneField('PolicyInsured', null=True)
+    owner_insured = models.BooleanField(default=True)
+    insured_list = models.ManyToManyField(AdditionalProfile, blank=True)
 
     class Meta:
         verbose_name = 'взр'
@@ -85,6 +86,10 @@ class VZRPolicy(models.Model):
 
 class IFLPolicy(models.Model):
     policy = models.ForeignKey(PolicyBase, null=True)
+    property = models.OneToOneField('InsuredProperty', null=True, blank=True)
+
+    def __str__(self):
+        return self.policy.insure_type
 
     class Meta:
         verbose_name = 'ифл'
@@ -93,7 +98,8 @@ class IFLPolicy(models.Model):
 
 class NSPolicy(models.Model):
     policy = models.ForeignKey(PolicyBase)
-    insured = models.OneToOneField('PolicyInsured', null=True)
+    owner_insured = models.BooleanField(default=True)
+    insured_list = models.ManyToManyField(AdditionalProfile, blank=True)
 
     class Meta:
         verbose_name = 'нc'
@@ -106,14 +112,14 @@ class NSPolicy(models.Model):
 class InsuredProperty(models.Model):
     name = models.CharField('Название собсвенности', max_length=100)
     country = models.CharField('страна', max_length=20)
-    region = models.CharField('регион', max_length=100)
+    region = models.CharField('регион', max_length=100, null=True, blank=True)
     city = models.CharField('город', max_length=100)
     street = models.CharField('улица', max_length=100)
     bld_letter = models.CharField('строение\литера', max_length=10,
-                                  blank=True, default='')
+                                  blank=True, default='', null=True)
     bld_child = models.CharField('корпус', max_length=10,
-                                 blank=True, default='')
-    apartment = models.CharField('квартира', max_length=10)
+                                 blank=True, default='', null=True)
+    apartment = models.CharField('квартира', max_length=10, null=True, blank=True)
 
     class Meta:
         verbose_name = 'застрахованная собственность'
@@ -133,14 +139,6 @@ class RequestChanges(TimeStampedModel):
     class Meta:
         verbose_name = 'запрос изменений'
         verbose_name_plural = 'Запрос изменений'
-
-    def __str__(self):
-        return self.profile.user.email
-
-
-class PolicyInsured(models.Model):
-    profile = models.ForeignKey(Profile, null=True, blank=True)
-    additional_profiles = models.ManyToManyField(AdditionalProfile, blank=True)
 
     def __str__(self):
         return self.profile.user.email
